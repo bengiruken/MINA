@@ -12,6 +12,7 @@ inline double entropy( int up, int dn ) {
 	if ( up == 0 ) return 0.0;
 	else return - double(up) / dn * log2( double(up) / dn );
 } 
+
 double mutualInformation( vector<int> A, const int numTypeA, vector<int> B, const int numTypeB, Outcome outcome, vector<bool> selected ) {
 
 	const int maxState = numTypeA * numTypeB;
@@ -79,19 +80,6 @@ double mutualInformation( vector<int> A, const int numTypeA, vector<int> B, cons
 
 	return ( H_X + H_Y - H_XY ) / H_Y;
 	return 0;
-}
-
-double permutationTest( vector<int> &A, const int numTypeA, vector<int> &B, const int numTypeB, Outcome outcome, int numIteration ) {
-	double realValue = mutualInformation( A, numTypeA, B, numTypeB, outcome );	
-
-	int numFailure;
-	for( int i = 0 ; i < numIteration ; ++i ) {
-		outcome.permute();
-		double randomValue = mutualInformation( A, numTypeA, B, numTypeB, outcome );
-		if( randomValue >= realValue ) ++numFailure;
-	}
-
-	return numFailure / double(numIteration);
 }
 
 #endif

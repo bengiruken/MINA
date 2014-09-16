@@ -1,0 +1,8 @@
+# caution - Do not remove name of parameters
+geneinfo: ../sample/symbol.txt
+profiles: ../sample/CNA.txt ../sample/mRNA.txt ../METH.txt
+profileType: discrete continuous continuous
+clinical: ../sample/clinical.txt
+separation: mean
+maxPerm: 30
+alpha: 0.8 0.1 0.1
