@@ -3,29 +3,29 @@ MINA
 
 Integrative network analysis for gene-gene interactions associated with clinical outcome across multiple genomic profiles
 
-# A brief instruction how to use MINA
+## A brief instruction how to use MINA
 
-## Fetching source code from git repository
+### Fetching source code from git repository
 
 <pre>
 git clone https://github.com/hhjeong/MINA
 </pre>
 
-## Compliation of source codes
+### Compliation of source codes
 
 <pre>
 cd MINA
 Make
 </pre>
 
-## Running MINA with toy example
+### Running MINA with toy example
 
 <pre>
 cd bin
 ./MINA
 </pre>
 
-# Setting parameters
+### Setting parameters
 * geneinfo
  * A file path for symbols of genes for every profiles.
 * profiles
@@ -37,7 +37,7 @@ cd bin
 * alpha
  * alpha threshold of single profile / intersection network / union network.
 
-# Example of param.txt
+### Example of param.txt
 <pre>
 geneinfo: ../sample/symbol.txt
 profiles: ../sample/CNA.txt ../sample/mRNA.txt ../sample/METH.txt
