@@ -36,3 +36,13 @@ cd bin
  * Number of iterations for permutation tests.
 * alpha
  * alpha threshold of single profile / intersection network / union network.
+
+# Example of param.txt
+<pre>
+geneinfo: ../sample/symbol.txt
+profiles: ../sample/CNA.txt ../sample/mRNA.txt ../sample/METH.txt
+clinical: ../sample/clinical.txt
+maxPerm: 30
+alpha: 0.0 0.7 1.0
+</pre>
+
