@@ -63,20 +63,6 @@ public:
 	void permute() {
 		random_shuffle( status.begin(), status.end() );
 	}
-
-	void permute(vector<bool> selected ) {
-		vector<int> idx;
-		for( int i = 0 ; i < selected.size() ; ++i ) if( selected[i] ) idx.push_back(i);
-		
-		vector<int>idx2 = idx;
-	
-		random_shuffle( idx2.begin(), idx2.end() );
-
-		for( int i = 0 ; i < idx.size() ; ++i ) {
-			swap( status[ idx[i] ], status[ idx2[i] ] );
-		}
-	}
-
 };
 
 #endif

@@ -10,7 +10,6 @@ using namespace std;
 struct Param {
     string geneInfo;
     vector<string> profiles;
-    vector<string> profileType;
     string clinical;
     string separation;
     int maxPerm;
@@ -31,12 +30,6 @@ struct Param {
                     profiles.push_back(toks[i]);
                 }
             }
-            else if( toks.front() == "profileType:") {
-                for( size_t i = 1 ; i < toks.size() ; ++i ) {
-                    profileType.push_back(toks[i]);
-                }
-            }
-
             else if( toks.front() == "clinical:" ) { 
                 clinical = toks.back();
             }
@@ -66,7 +59,6 @@ struct Param {
             out << "Start time : " << currentDateTime() << endl;
             out << "geneInfo : " << geneInfo << endl;
             out << "profiles : " << join( profiles, "," ) << endl;
-            out << "profileType : " << join( profileType, "," ) << endl;
             out << "clinical : " << clinical << endl;
             out << "separation : " << separation << endl;
             out << "maxPerm : " << maxPerm << endl;

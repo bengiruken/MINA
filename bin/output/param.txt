@@ -1,0 +1,8 @@
+Informations
+Start time : 2014-09-17.14:39:37
+geneInfo : ../sample/symbol.txt
+profiles : ../sample/CNA.txt,../sample/mRNA.txt,../sample/METH.txt
+clinical : ../sample/clinical.txt
+separation : 
+maxPerm : 30
+alpha : 0 0.7 1

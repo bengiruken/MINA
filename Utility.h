@@ -17,10 +17,8 @@ vector< vector<T> > read(  const char *filename ) {
 	while( getline(inp,line) ) {
 		istringstream sin(line);
 
-		string genename;
 		vector<T> row;
 		T value;
-		sin >> genename;
 		while( sin >> value ) {
 			row.push_back(value);
 		}
@@ -92,6 +90,12 @@ string join( const vector<string> &vec, const string &delim ) {
     }
     
     return ret;
+}
+
+// source : http://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
+string base_name(std::string const & path)
+{
+    return path.substr(path.find_last_of("/\\") + 1);
 }
 
 #endif
