@@ -15,7 +15,7 @@ git clone https://github.com/hhjeong/MINA
 
 <pre>
 cd MINA
-Make
+make
 </pre>
 
 ### Running MINA with toy example
