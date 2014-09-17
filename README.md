@@ -11,7 +11,7 @@ Integrative network analysis for gene-gene interactions associated with clinical
 git clone https://github.com/hhjeong/MINA
 </pre>
 
-### Compliation of source codes
+### Compilation of source codes
 
 <pre>
 cd MINA
