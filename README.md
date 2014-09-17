@@ -27,12 +27,12 @@ cd bin
 
 # Setting parameters
 * geneinfo
-** A file path for symbols of genes for every profiles.
+ * A file path for symbols of genes for every profiles.
 * profiles
-** File paths for expressions/alterations of genomic profiles.
+ * File paths for expressions/alterations of genomic profiles.
 * clinical
-** A file path for outcomes for each patients.
+ * A file path for outcomes for each patients.
 * maxPerm
-** Number of iterations for permutation tests.
+ * Number of iterations for permutation tests.
 * alpha
-** alpha threshold of single profile / intersection network / union network.
+ * alpha threshold of single profile / intersection network / union network.
