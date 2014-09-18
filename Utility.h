@@ -98,4 +98,38 @@ string base_name(std::string const & path)
     return path.substr(path.find_last_of("/\\") + 1);
 }
 
+void showProgress(  const long long numIteration, const long long totalIteration,
+                    const bool reset = false ) {
+    static int percentage = -1;
+    static string content;
+
+    if( reset ) {
+        percentage = -1;
+        content = "";
+    }
+
+    int newPercentage = numIteration * 100 / totalIteration;
+
+    if( newPercentage > percentage ) {
+        percentage = newPercentage;
+        for( int i = 0 ; i < content.size() ; ++i ) {
+            cerr << "\b";
+        }
+
+        char buf[20];
+        sprintf(buf,"[%3d%%] ", newPercentage);
+        content = buf;
+
+        const int len = percentage / 10;
+        for( int i = 0 ; i < len ; ++i ) {
+            content += "*";
+        }
+        for( int i = len ; i < 10 ; ++i ) {
+            content += ".";
+        }
+
+        cerr << content;
+    }
+
+}
 #endif

@@ -27,6 +27,11 @@ double getThreshold(    Profile &profile, Outcome &outcome,
     }
 
     double maxi = 0;
+
+    const long long totalIteration = (long long) profile.getNumFeatures() * 
+                                                 (profile.getNumFeatures()-1) / 2;
+
+    long long iteration = 0;
     for( size_t i = 0 ; i < profile.getNumFeatures() ; ++i ) {
         for( size_t j = i+1 ; j < profile.getNumFeatures() ; ++j ) {
 
@@ -36,6 +41,7 @@ double getThreshold(    Profile &profile, Outcome &outcome,
                                                     profile[j], profile.getNumTypes(),
                                                     outcomes[i] );
             }
+            showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
             maxi = max( maxi, avg );
         }
@@ -63,6 +69,12 @@ void getEdges(  const vector<string> genenames, const Param &param,
     const vector<double> &alpha = param.alpha;
 
     const size_t numFeatures = profiles.front().getNumFeatures();
+
+    const long long totalIteration = (long long) numFeatures * 
+                                                 (numFeatures-1) / 2;
+    long long iteration = 0;
+
+    showProgress( 0, totalIteration, true );
     for( size_t i = 0 ; i < numFeatures ; ++i ) for( size_t j = i + 1 ; j < numFeatures ; ++j ) {
         vector<double> values( numProfiles, 0.0 );
         for( int ord = 0 ; ord < numProfiles ; ++ord ) {
@@ -111,6 +123,9 @@ void getEdges(  const vector<string> genenames, const Param &param,
             }
             fprintf( outUni, "\n" );
         }
+
+
+        showProgress( ++iteration, totalIteration );
     }
 
     fclose( outUni );
@@ -133,21 +148,22 @@ int main(int argv, char *argc[]) {
     vector<double> thresholds;
 
 
-    cerr << "Reading profiles and get threshold value...";
+    cerr << "Reading profiles and get threshold value..." << endl;
     ofstream outTh("output/threshold.txt");
+
     for( size_t i = 0 ; i < param.profiles.size() ; ++i ) {
         profiles.push_back( Profile( param.profiles[i].c_str(), 5 ) );
         thresholds.push_back( getThreshold( profiles.back(), outcome, param.maxPerm ) );
         outTh << param.profiles[i] << "\t" << thresholds.back() << endl;
     }
-    cerr << "DONE!" << endl;
+    cerr << " DONE!" << endl;
     outTh.close();
 
-    cerr << "Generating graphs...";
+    cerr << "Generating networks..." << endl;
     getEdges( genenames, param, profiles, outcome, thresholds );
-    cerr <<  "DONE!" << endl;
+    cerr <<  " DONE!" << endl;
 
-    cerr << "MINA is finished! You can check the results into output folder!" << endl;
+    cerr << "Finish! You can check the results into output folder!" << endl;
     return 0;
 }
 
