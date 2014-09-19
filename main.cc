@@ -39,7 +39,7 @@ double getThreshold(    Profile &profile, Outcome &outcome,
             for( int iter = 0 ; iter < numPermute ; ++iter ) {
                 sumMI[iter] = mutualInformation(    profile[i], profile.getNumTypes(), 
                                                     profile[j], profile.getNumTypes(),
-                                                    outcomes[i] );
+                                                    outcomes[iter] );
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
