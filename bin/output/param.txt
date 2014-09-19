@@ -1,5 +1,5 @@
 Informations
-Start time : 2014-09-18.18:24:36
+Start time : 2014-09-19.14:34:41
 geneInfo : ../sample/symbol.txt
 profiles : ../sample/CNA.txt,../sample/mRNA.txt,../sample/METH.txt
 clinical : ../sample/clinical.txt

@@ -31,6 +31,7 @@ double getThreshold(    Profile &profile, Outcome &outcome,
     const long long totalIteration = (long long) profile.getNumFeatures() * 
                                                  (profile.getNumFeatures()-1) / 2;
 
+    showProgress( 0, 1, true );
     long long iteration = 0;
     for( size_t i = 0 ; i < profile.getNumFeatures() ; ++i ) {
         for( size_t j = i+1 ; j < profile.getNumFeatures() ; ++j ) {
@@ -153,10 +154,11 @@ int main(int argv, char *argc[]) {
 
     for( size_t i = 0 ; i < param.profiles.size() ; ++i ) {
         profiles.push_back( Profile( param.profiles[i].c_str(), 5 ) );
+        cerr << param.profiles[i] << " ";
         thresholds.push_back( getThreshold( profiles.back(), outcome, param.maxPerm ) );
+        cerr << " DONE!" << endl;
         outTh << param.profiles[i] << "\t" << thresholds.back() << endl;
     }
-    cerr << " DONE!" << endl;
     outTh.close();
 
     cerr << "Generating networks..." << endl;

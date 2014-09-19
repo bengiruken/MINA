@@ -1,3 +1,3 @@
-../sample/CNA.txt	0.0637195
-../sample/mRNA.txt	0.0922086
-../sample/METH.txt	0.0611773
+../sample/CNA.txt	0.0486576
+../sample/mRNA.txt	0.0616434
+../sample/METH.txt	0.0551721

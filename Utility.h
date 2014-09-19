@@ -106,6 +106,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
     if( reset ) {
         percentage = -1;
         content = "";
+        return;
     }
 
     int newPercentage = numIteration * 100 / totalIteration;
