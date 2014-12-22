@@ -14,9 +14,44 @@ inline double entropy( int up, int dn ) {
 } 
 
 
-double mutualInformation(   vector<int> A, const int numTypeA, 
-                            vector<int> B, const int numTypeB, 
-                            Outcome outcome ) {
+double getInteraction(  vector<int> A, const int numTypeA, 
+                        vector<int> B, const int numTypeB ) {
+
+    const int N = (int)A.size();
+    int freq[ numTypeA ][ numTypeB ];
+	memset( freq, 0, sizeof freq );
+
+	for( size_t i = 0 ; i < N ; ++i ) {
+        freq[ A[i] ][ B[i] ]++;
+	}
+
+    double H_X = 0;
+    for( int i = 0 ; i < numTypeA ; ++i ) {
+        int colsum = 0;
+        for( int j = 0 ; j < numTypeB ; ++j ) colsum += freq[i][j];
+        H_X += entropy( colsum, N );
+    }
+
+    double H_Y = 0;
+    for( int j = 0 ; j < numTypeB ; ++j ) {
+        int colsum = 0;
+        for( int i = 0 ; i < numTypeA ; ++i ) colsum += freq[i][j];
+        H_Y += entropy( colsum, N );
+    }
+
+    double H_XY = 0;
+    for( int i = 0 ; i < numTypeA ; ++i ) {
+        for( int j = 0 ; j < numTypeB ; ++j ) {
+            H_XY += entropy( freq[i][j], N );
+        }
+    }
+
+	return ( H_X + H_Y - H_XY ) / max(H_X,H_Y);
+}
+
+double getOutcomeAssociation(   vector<int> A, const int numTypeA, 
+                                vector<int> B, const int numTypeB, 
+                                Outcome outcome ) {
 
 	const int maxState = numTypeA * numTypeB;
 
