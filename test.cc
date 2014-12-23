@@ -17,7 +17,9 @@
 #include "Param.h"
 using namespace std;
 
-double getOutcomeAssociationNetworkThreshold( Profile &profile, Outcome &outcome, const int numPermute ) {
+double getOutcomeAssociationNetworkThreshold( Profile &profile, Outcome &outcome, 
+    const int numPermute ) {
+
     srand( time(NULL) );
     vector<Outcome> outcomes( numPermute, outcome );
     vector<double> sumMI( numPermute, 0 );
@@ -44,6 +46,10 @@ double getOutcomeAssociationNetworkThreshold( Profile &profile, Outcome &outcome
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
+
+            if( maxi < avg ) {
+                cerr << "update " << avg << " (" << i << "," << j  << ")" << endl;
+            }
             maxi = max( maxi, avg );
         }
     }
@@ -72,11 +78,15 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
                 random_shuffle(pi.begin(),pi.end());
                 random_shuffle(pj.begin(),pj.end());
                 sumMI[iter] = getInteraction( 
-                    pi[i], profile.getNumTypes()
-                    pj[j], profile.getNumTypes() );
+                    pi, profile.getNumTypes(),
+                    pj, profile.getNumTypes() );
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
+
+            if( maxi < avg ) {
+                cerr << "update " << avg << " (" << i << "," << j  << ")" << endl;
+            }
             maxi = max( maxi, avg );
         }
     }
@@ -84,7 +94,6 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
     return maxi;
 }
 
-v
 void getAssocationNetwork(  
     const vector<string> genenames, const Param &param, 
     vector<Profile> &profiles, Outcome &outcome, 
@@ -106,8 +115,7 @@ void getAssocationNetwork(
 
     const size_t numFeatures = profiles.front().getNumFeatures();
 
-    const long long totalIteration = (long long) numFeatures * 
-        (numFeatures-1) / 2;
+    const long long totalIteration = (long long) numFeatures * (numFeatures-1) / 2;
     long long iteration = 0;
 
     showProgress( 0, totalIteration, true );
@@ -169,37 +177,17 @@ void getAssocationNetwork(
 
 int main(int argv, char *argc[]) {
 
-    cerr << "Starting MINA..." << endl;
-    Param param;
-    cerr << "Getting parameters...";
-    ofstream outPa("output/param.txt");
-    param.getParamInfo(outPa);
-    outPa.close();
-    cerr << "DONE!" << endl;
+    const int maxPerm = 30;
+    Outcome outcome("/home/hhjeong/ws/OV/clinical.txt");
+    vector<string> genenames = readSymbols("/home/hhjeong/ws/OV/sym.txt");
 
-    Outcome outcome(param.clinical.c_str());
-    vector<string> genenames = readSymbols(param.geneInfo.c_str());
-    vector<Profile> profiles;
-    vector<double> thresholds;
+    Profile profiles( "/home/hhjeong/ws/OV/mRNA.txt", 5 );
+    double interactionThreshold = getInteractionNetworkThreshold( profiles, maxPerm );
+    double associationThreshold = getOutcomeAssociationNetworkThreshold( profiles, outcome, maxPerm );
 
+    cerr << interactionThreshold << endl;
+    cerr << associationThreshold << endl;
 
-    cerr << "Reading profiles and get threshold value..." << endl;
-    ofstream outTh("output/threshold.txt");
-
-    for( size_t i = 0 ; i < param.profiles.size() ; ++i ) {
-        profiles.push_back( Profile( param.profiles[i].c_str(), 5 ) );
-        cerr << param.profiles[i] << " ";
-        thresholds.push_back( getOutcomeAssociationNetworkThreshold( profiles.back(), outcome, param.maxPerm ) );
-        cerr << " DONE!" << endl;
-        outTh << param.profiles[i] << "\t" << thresholds.back() << endl;
-    }
-    outTh.close();
-
-    cerr << "Generating networks..." << endl;
-    getAssocationNetwork( genenames, param, profiles, outcome, thresholds );
-    cerr <<  " DONE!" << endl;
-
-    cerr << "Finish! You can check the results into output folder!" << endl;
     return 0;
 }
 

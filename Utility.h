@@ -109,16 +109,16 @@ void showProgress(  const long long numIteration, const long long totalIteration
         return;
     }
 
-    int newPercentage = numIteration * 100 / totalIteration;
+    long long newPercentage = numIteration * 100 / totalIteration;
 
     if( newPercentage > percentage ) {
         percentage = newPercentage;
         for( int i = 0 ; i < content.size() ; ++i ) {
-            cerr << "\b";
+            cout << "\b";
         }
 
         char buf[20];
-        sprintf(buf,"[%3d%%] ", newPercentage);
+        sprintf(buf,"[%6.2f%%] ", numIteration * 100.0 / totalIteration);
         content = buf;
 
         const int len = percentage / 10;
@@ -129,7 +129,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
             content += ".";
         }
 
-        cerr << content;
+        cout << content;
     }
 
 }

@@ -72,8 +72,8 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
                 random_shuffle(pi.begin(),pi.end());
                 random_shuffle(pj.begin(),pj.end());
                 sumMI[iter] = getInteraction( 
-                    pi[i], profile.getNumTypes()
-                    pj[j], profile.getNumTypes() );
+                    pi, profile.getNumTypes(),
+                    pj, profile.getNumTypes() );
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
@@ -84,7 +84,6 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
     return maxi;
 }
 
-v
 void getAssocationNetwork(  
     const vector<string> genenames, const Param &param, 
     vector<Profile> &profiles, Outcome &outcome, 
