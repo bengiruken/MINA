@@ -48,7 +48,7 @@ int main(int argv, char *argc[]) {
     outTh.close();
 
     cerr << "Generating networks..." << endl;
-    getAssocationNetwork( genenames, param, profiles, outcome, thresholds );
+    // getAssocationNetwork( genenames, param, profiles, outcome, thresholds );
     cerr <<  " DONE!" << endl;
 
     cerr << "Finish! You can check the results into output folder!" << endl;

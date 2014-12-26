@@ -100,10 +100,11 @@ string base_name(std::string const & path)
 
 void showProgress(  const long long numIteration, const long long totalIteration,
                     const bool reset = false ) {
-    static int percentage = -1;
+    static long long percentage = -1;
     static string content;
 
     if( reset ) {
+        if( percentage != -1 ) cout << endl;
         percentage = -1;
         content = "";
         return;
@@ -111,7 +112,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
 
     long long newPercentage = numIteration * 100 / totalIteration;
 
-    if( newPercentage > percentage ) {
+    //if( newPercentage > percentage ) {
         percentage = newPercentage;
         for( int i = 0 ; i < content.size() ; ++i ) {
             cout << "\b";
@@ -130,7 +131,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
         }
 
         cout << content;
-    }
+    //}
 
 }
 #endif

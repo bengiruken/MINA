@@ -1,5 +1,3 @@
-all: main.cc
-	g++ -fopenmp -O3 main.cc -o bin/MINA
-
-branch: main.cc
-	g++ -fopenmp -O3 test.cc -o bin/PIONA
+all: mina.cc piona.cc
+	g++ -fopenmp -O3 mina.cc -o bin/MINA
+	g++ -fopenmp -O3 piona.cc -o bin/PIONA
