@@ -158,10 +158,7 @@ void saveNetwork( const Network &network, const char *fileName ) {
     }
     out.close();
 
-    cout << "[SAVE NETWORK]" << endl;
-    cout << "File name = " << fileName << endl;
-    cout << "Num vertices = " << N << endl;
-    cout << "Num edges = " << numEdges << endl;
+    cout << fileName << " " << N << " " << numEdges << endl;
 
 }
 
@@ -200,6 +197,35 @@ Network loadNetwork( const char *fileName ) {
 }
 
 
+Network getIntersectionNetwork( const Network &network1, const Network &network2 ) {
+    assert( network1.size() == network2.size() );
+    const int N = network1.size();
+
+    Network ret( N, EdgeList(0) );
+
+    for( int i = 0 ; i < N ; ++i ) {
+        auto it1 = network1[i].begin();
+        auto it2 = network2[i].begin();
+
+        while( it1 != network1[i].end() && it2 != network2[i].begin() ) {
+            if( it1->first == it2->first ) {
+                ret[i].push_back( Edge( it1->first, 0.0 ) );
+                it1++;
+                it2++;
+            }
+            else if( it1->first < it2->first ) {
+                it1++; 
+            }
+            else {
+                it2++;
+            }
+        }
+
+    }
+
+    return ret;
+}
+
 Network getDifferenceNetwork( const Network &mine, const Network &other ) {
     assert( mine.size() == other.size() );
     Network network( mine.size(), EdgeList(0) );
@@ -210,11 +236,11 @@ Network getDifferenceNetwork( const Network &mine, const Network &other ) {
         EdgeList::const_iterator that = other[i].begin();
 
         while( it != mine[i].end() && that != other[i].end() ) {
-            if( *it == *that ) {
+            if( it->first == that->first ) {
                 ++it;
                 ++that;
             }
-            else if( *it < *that ) {
+            else if( it->first < that->first ) {
                 network[i].push_back(*it);
                 ++it;
             }
@@ -240,6 +266,32 @@ Network filterNetwork( const Network &network, const double &cutoff ) {
     }
 
     return ret;
+}
+
+void getNetworkInformation( const Network &network ) {
+    int nVertices = 0;
+    int nEdges = 0;
+
+    const int N = network.size();
+
+    vector<bool> ispresented(N,false);
+    for( int i = 0 ; i < N ; ++i ) {
+        if( network[i].size() == 0 &&
+            !ispresented[i] ) {
+            continue;
+        }
+        nVertices++;
+        for( auto it = network[i].begin() ;
+                it != network[i].end() ;
+                ++it ) {
+            ispresented[it->first] = true;
+            nEdges++;
+        }
+
+    }
+    
+    cerr << "# vertices: " << nVertices << endl;
+    cerr << "# edges   : " << nEdges << endl;
 }
 
 #endif

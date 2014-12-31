@@ -25,32 +25,37 @@ int main(int argv, char *argc[]) {
     Outcome outcome("/home/hhjeong/ws/OV/clinical.txt");
     vector<string> genenames = readSymbols("/home/hhjeong/ws/OV/sym.txt");
 
-    Profile profiles( "/home/hhjeong/ws/OV/mRNA.txt", 5 );
-    double interactionThreshold = getInteractionNetworkThreshold( profiles, maxPerm );
-    double associationThreshold = getOutcomeAssociationNetworkThreshold( profiles, outcome, maxPerm );
+    Profile profile( "/home/hhjeong/ws/OV/mRNA.txt", 5 );
+    double interactionThreshold = getInteractionNetworkThreshold( profile, maxPerm );
+    double associationThreshold = getOutcomeAssociationNetworkThreshold( profile, outcome, maxPerm );
 
     cerr << interactionThreshold << endl;
     cerr << associationThreshold << endl;
 
-
     double alpha[] = { 0.0, 0.2, 0.4, 0.6, 0.8 };
+
+    Network associationNetwork = getAssocationNetwork( profile, outcome, 
+            associationThreshold );
+    Network interactionNetwork = getInteractionNetwork( profile, 
+            interactionThreshold );
 
     for( int i = 0 ; i < 5 ; ++i ) {
         cerr << "[DEBUG] alpha = " << alpha[i] << endl;
-        Network associationNetwork = getAssocationNetwork( profiles, outcome, 
-            associationThreshold, alpha[i] );
-        Network interactionNetwork = getInteractionNetwork( profiles, 
-            interactionThreshold, alpha[i] );
-        
+        Network filteredAssociationNetwork = filterNetwork( associationNetwork, 
+            alpha[i] * associationThreshold );
+        Network filteredInteractionNetwork = filterNetwork( interactionNetwork,
+            alpha[i] * interactionThreshold );
+
         char fileName[128];
 
         sprintf(fileName,"network/mRNA_association_network_%.1f.txt", alpha[i]);
-        saveNetwork( associationNetwork, fileName );
+        saveNetwork( filteredAssociationNetwork, fileName );
         sprintf(fileName,"network/mRNA_interaction_network_%.1f.txt", alpha[i]);
-        saveNetwork( interactionNetwork, fileName );
+        saveNetwork( filteredInteractionNetwork, fileName );
 
+        Network pureAssociationNetwork = getDifferenceNetwork( 
+                filteredAssociationNetwork, filteredInteractionNetwork );
 
-        Network pureAssociationNetwork = getDifferenceNetwork( associationNetwork, interactionNetwork );
         sprintf(fileName,"network/mRNA_pure_network_%.1f.txt", alpha[i]);
         saveNetwork( pureAssociationNetwork, fileName );
     }
