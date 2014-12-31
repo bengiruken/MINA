@@ -79,11 +79,6 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
-
-            if( maxi < avg ) {
-                cerr << "[DEBUG]" << "maxi : " << maxi << " at (";
-                cerr << i << "," << j << ")" << endl;
-            }
             maxi = max( maxi, avg );
         }
     }
@@ -91,7 +86,8 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
     return maxi;
 }
 
-typedef vector<int> EdgeList;
+typedef pair<int,double> Edge;
+typedef vector<Edge> EdgeList;
 typedef vector< EdgeList > Network;
 
 Network getAssocationNetwork( Profile &profile, Outcome &outcome, double thresholds, double alpha = 0.0 ) {
@@ -111,11 +107,10 @@ Network getAssocationNetwork( Profile &profile, Outcome &outcome, double thresho
                 profile[i], profile.getNumTypes(), 
                 profile[j], profile.getNumTypes(), outcome );
             if( value > strictThreshold ) {
-                network[i].push_back(j);
+                network[i].push_back(Edge(j,value));
             }
             showProgress(++iteration, totalIteration);
         }
-        // fprintf( stderr, "[DEBUG] network[%d] = %d\n", i, network[i].size() );
     }
     return network;
 }
@@ -138,7 +133,7 @@ Network getInteractionNetwork( Profile &profile, double thresholds, double alpha
                 profile[i], profile.getNumTypes(), 
                 profile[j], profile.getNumTypes() );
             if( value > strictThreshold ) {
-                network[i].push_back(j);
+                network[i].push_back(Edge(j,value));
             }
             showProgress(++iteration, totalIteration);
         }
@@ -156,7 +151,7 @@ void saveNetwork( const Network &network, const char *fileName ) {
         const int M = here.size();
         out << i << ":";
         for( int j = 0 ; j < M ; ++j ) {
-            out << " " << here[j];
+            out << " " << here[j].first << " " << here[j].second;
         }         
         numEdges += M;
         out << endl;
@@ -186,10 +181,10 @@ Network loadNetwork( const char *fileName ) {
         sin >> tok;
 
         int vertex;
-
+        double weight;
         EdgeList edgeList;
-        while( sin >> vertex ) {
-            edgeList.push_back(vertex);
+        while( sin >> vertex >> weight ) {
+            edgeList.push_back(Edge(vertex,weight));
         }
     
         numEdges += edgeList.size();
@@ -211,14 +206,40 @@ Network getDifferenceNetwork( const Network &mine, const Network &other ) {
     const int N = mine.size();
 
     for( int i = 0 ; i < N ; ++i ) {
-        EdgeList edgeList( mine[i].size() + other[i].size(), 0 );
-        EdgeList::iterator it = set_difference( mine[i].begin(), mine[i].end(), 
-            other[i].begin(), other[i].end(), edgeList.begin() );
-        edgeList.resize(it-edgeList.begin());
+        EdgeList::const_iterator it = mine[i].begin();
+        EdgeList::const_iterator that = other[i].begin();
 
-        network[i] = edgeList;
+        while( it != mine[i].end() && that != other[i].end() ) {
+            if( *it == *that ) {
+                ++it;
+                ++that;
+            }
+            else if( *it < *that ) {
+                network[i].push_back(*it);
+                ++it;
+            }
+            else {
+                ++that;
+            }
+                
+        }
+
     }
     return network;
+}
+
+Network filterNetwork( const Network &network, const double &cutoff ) {
+    const int N = network.size();
+
+    Network ret(N,EdgeList(0));
+  
+    for( int i = 0 ; i < N ; ++i ) {
+        for( auto it = network[i].begin() ; it != network[i].end() ; ++it ) {
+            if( it->second > cutoff ) ret[i].push_back(*it);
+        }
+    }
+
+    return ret;
 }
 
 #endif

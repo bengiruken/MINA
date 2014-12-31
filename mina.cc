@@ -34,7 +34,6 @@ int main(int argv, char *argc[]) {
     vector<Profile> profiles;
     vector<double> thresholds;
 
-
     cerr << "Reading profiles and get threshold value..." << endl;
     ofstream outTh("output/threshold.txt");
 

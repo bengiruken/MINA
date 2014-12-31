@@ -51,7 +51,6 @@ int main(int argv, char *argc[]) {
 
 
         Network pureAssociationNetwork = getDifferenceNetwork( associationNetwork, interactionNetwork );
-
         sprintf(fileName,"network/mRNA_pure_network_%.1f.txt", alpha[i]);
         saveNetwork( pureAssociationNetwork, fileName );
     }
