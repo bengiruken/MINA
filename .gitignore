@@ -28,7 +28,7 @@
 *.app
 
 # output file
-network/*
+network/*.txt
 
 # binary file
 bin/*
