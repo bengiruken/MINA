@@ -1,0 +1,28 @@
+﻿Build started 2015-01-05 오후 7:17:11.
+     1>Project "C:\Users\hhjeong\Source\Repos\MINA\MINA.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt toy_example.cc
+         toy_example.cc
+     1>c:\program files (x86)\microsoft visual studio 12.0\vc\include\numeric(20): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\numeric(31) : see reference to function template instantiation '_Ty std::_Accumulate<std::pair<double,__int64>*,_Ty,_Fn2>(_InIt,_InIt,_Ty,_Fn2)' being compiled
+                 with
+                 [
+                     _Ty=int
+         ,            _Fn2=main::<lambda_f6308f7adeb8003a8f72441bb6a1ea17>
+         ,            _InIt=std::pair<double,__int64> *
+                 ]
+                 c:\users\hhjeong\source\repos\mina\toy_example.cc(47) : see reference to function template instantiation '_Ty std::accumulate<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::pair<double,__int64>>>>,int,main::<lambda_f6308f7adeb8003a8f72441bb6a1ea17>>(_InIt,_InIt,_Ty,_Fn2)' being compiled
+                 with
+                 [
+                     _Ty=int
+         ,            _InIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::pair<double,__int64>>>>
+         ,            _Fn2=main::<lambda_f6308f7adeb8003a8f72441bb6a1ea17>
+                 ]
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\hhjeong\Source\Repos\MINA\Debug\MINA.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\hhjeong\Source\Repos\MINA\Debug\MINA.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\hhjeong\Source\Repos\MINA\Debug\MINA.lib" /MACHINE:X86 Debug\toy_example.obj
+         MINA.vcxproj -> C:\Users\hhjeong\Source\Repos\MINA\Debug\MINA.exe
+     1>Done Building Project "C:\Users\hhjeong\Source\Repos\MINA\MINA.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.11

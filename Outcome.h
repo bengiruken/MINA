@@ -4,10 +4,14 @@
 #include <fstream>
 #include <algorithm>
 #include <cassert>
+#include <random>
+
 using namespace std;
 
 class Outcome {
 private:
+	random_device rd;
+	mt19937 gen;
 	size_t numTypes;
 	vector<int> status;	
 	vector<int> numSubjects;
@@ -36,6 +40,7 @@ public:
 		for( vector<int>::iterator it = status.begin() ; it != status.end() ; ++it ) {
 			numSubjects[*it]++;
 		}
+		gen = mt19937(rd());
 	}
 
 	Outcome( const Outcome &other ) {
@@ -61,7 +66,7 @@ public:
 	}
 
 	void permute() {
-		random_shuffle( status.begin(), status.end() );
+		shuffle( status.begin(), status.end(), gen );
 	}
 };
 

@@ -18,10 +18,10 @@ double getInteraction(  vector<int> A, const int numTypeA,
                         vector<int> B, const int numTypeB ) {
 
     const int N = (int)A.size();
-    int freq[ numTypeA ][ numTypeB ];
-	memset( freq, 0, sizeof freq );
 
-	for( size_t i = 0 ; i < N ; ++i ) {
+	vector< vector<int> > freq(numTypeA, vector<int>(numTypeB, 0));
+
+	for( int i = 0 ; i < N ; ++i ) {
         freq[ A[i] ][ B[i] ]++;
 	}
 
@@ -55,30 +55,28 @@ double getOutcomeAssociation(   vector<int> A, const int numTypeA,
 
 	const int maxState = numTypeA * numTypeB;
 
-	int freq[ outcome.getNumTypes() ][ maxState ];
-
-	memset( freq, 0, sizeof freq );
+	vector< vector<int> > freq( outcome.getNumTypes(), vector<int>( maxState, 0));
 
 	for( size_t i = 0 ; i < outcome.size() ; ++i ) {
 		freq[ outcome[i] ][ A[i] * numTypeA + B[i] ]++;	
 	}
 
 	double H_Y = 0;
-    for( int i = 0 ; i < outcome.getNumTypes() ; ++i ) {
+    for( size_t i = 0 ; i < outcome.getNumTypes() ; ++i ) {
         H_Y += entropy( outcome.getNumSubjects(i), outcome.size() );
     }
 
 	double H_X = 0;
 	for( int i = 0 ; i < maxState ; ++i ) {
 		int colsum = 0;
-		for( int j = 0 ; j < outcome.getNumTypes() ; ++j ) {
+		for( size_t j = 0 ; j < outcome.getNumTypes() ; ++j ) {
 			colsum += freq[j][i];
 		}
 		H_X += entropy( colsum, outcome.size() );
 	}
 
 	double H_XY = 0;
-	for( int i = 0 ; i < outcome.getNumTypes() ; ++i ) {
+	for( size_t i = 0 ; i < outcome.getNumTypes() ; ++i ) {
 		for( int j = 0 ; j < maxState ; ++j ) {
 			H_XY += entropy( freq[i][j], outcome.size() );
 		}

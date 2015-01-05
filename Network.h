@@ -11,18 +11,19 @@
 #include <cmath>
 #include <limits>
 #include <numeric>
+#include <random>
 #include "omp.h"
 #include "Outcome.h"
 #include "Profile.h"
 #include "Measure.h"
 #include "Param.h"
+
 using namespace std;
 
 double getOutcomeAssociationNetworkThreshold( Profile &profile, Outcome &outcome, const int numPermute ) {
-    srand( time(NULL) );
     vector<Outcome> outcomes( numPermute, outcome );
     vector<double> sumMI( numPermute, 0 );
-    for( size_t  i = 0 ; i < numPermute ; ++i ) {
+    for( int  i = 0 ; i < numPermute ; ++i ) {
         outcomes[i].permute();
     }
 
@@ -53,7 +54,6 @@ double getOutcomeAssociationNetworkThreshold( Profile &profile, Outcome &outcome
 }
 
 double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) {
-    srand( time(NULL) );
     vector<double> sumMI( numPermute, 0 );
 
     double maxi = 0;
@@ -65,8 +65,11 @@ double getInteractionNetworkThreshold( Profile &profile, const int numPermute ) 
     long long iteration = 0;
     for( size_t i = 0 ; i < profile.getNumFeatures() ; ++i ) {
         vector< vector<int> > pi = vector< vector< int > >( numPermute, profile[i] );
+
+		random_device rd;
+		mt19937 gen(rd());
         for( int iter = 0 ; iter < numPermute ; ++iter ) {
-            random_shuffle( pi[iter].begin(), pi[iter].end() );
+			shuffle(pi[iter].begin(), pi[iter].end(), gen);
         }
 
         for( size_t j = i+1 ; j < profile.getNumFeatures() ; ++j ) {

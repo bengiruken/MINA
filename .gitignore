@@ -33,4 +33,4 @@ network/*.txt
 # binary file
 bin/*
 
-
+*.opensdf

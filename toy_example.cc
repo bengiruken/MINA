@@ -9,56 +9,43 @@
 #include <cmath>
 #include <limits>
 #include <numeric>
-#include "omp.h"
+#include <random>
 #include "Utility.h"
 #include "Outcome.h"
 #include "Profile.h"
 #include "Measure.h"
 #include "Param.h"
 #include "Network.h"
+#include "FrequencyTable.h"
 
 using namespace std;
 
 int main(int argv, char *argc[]) {
+	FrequencyTable ft(4);
 
-    const double alpha[] = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2 };
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_real_distribution<> dist;
 
-    const double associationThreshold = 0.07;
-    const double interactionThreshold = 0.04;
+	for (int i = 0; i < (int)1e5; ++i) {
+		ft.put(dist(gen));
+	}
 
-    const Network interactionNetwork = 
-        loadNetwork( "network/mRNA_interaction_network_0.0.txt" );
+	cerr << "minPos: " << ft.getMinPos() << endl;
+	cerr << "maxPos: " << ft.getMaxPos() << endl;
 
-    const Network associationNetwork =
-        loadNetwork( "network/mRNA_association_network_0.0.txt" );
+	auto ret = ft.freq2bin(30);
 
-    cerr << "information of interactionNetwork" << endl;
-    getNetworkInformation( interactionNetwork );
-    cerr << "information of associationNetwork" << endl;
-    getNetworkInformation( associationNetwork );
+	for (auto x : ret) {
+		cerr << x.first << "~: " << x.second << endl;
+	}
 
-
-    for( int i = 1 ; i < 7 ; ++i ) {
-        cerr << "[DEBUG] alpha = " << alpha[i] << endl;
-        Network filteredAssociationNetwork = filterNetwork( associationNetwork, 
-            (1+alpha[i]) * associationThreshold );
-        Network filteredInteractionNetwork = filterNetwork( interactionNetwork,
-            (1+alpha[i]) * interactionThreshold );
-
-        char fileName[128];
-
-        sprintf(fileName,"network/mRNA_association_network_%.1f.txt", alpha[i]);
-        saveNetwork( filteredAssociationNetwork, fileName );
-        sprintf(fileName,"network/mRNA_interaction_network_%.1f.txt", alpha[i]);
-        saveNetwork( filteredInteractionNetwork, fileName );
-
-        Network pureAssociationNetwork = getDifferenceNetwork( 
-                filteredAssociationNetwork, filteredInteractionNetwork );
-
-        sprintf(fileName,"network/mRNA_pure_network_%.1f.txt", alpha[i]);
-        saveNetwork( pureAssociationNetwork, fileName );
-    }
- 
-    return 0;
+	auto vec = [&ret](int i){ return ret[i].second; };
+	cerr << accumulate(ret.begin(), ret.end(), 0,
+		[](long long sum, pair<double, long long> x){ 
+		return sum + x.second; 
+	}) << endl;
+	system("PAUSE");
+	return 0;
 }
 

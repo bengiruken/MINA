@@ -1,5 +1,7 @@
 #ifndef __FILEHANDLER__
 #define __FILEHANDLER__
+#pragma warning(disable:4996)
+
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -114,7 +116,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
 
     //if( newPercentage > percentage ) {
         percentage = newPercentage;
-        for( int i = 0 ; i < content.size() ; ++i ) {
+        for( size_t i = 0 ; i < content.size() ; ++i ) {
             cout << "\b";
         }
 
@@ -122,7 +124,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
         sprintf(buf,"[%6.2f%%] ", numIteration * 100.0 / totalIteration);
         content = buf;
 
-        const int len = percentage / 10;
+        const int len = (int)percentage / 10;
         for( int i = 0 ; i < len ; ++i ) {
             content += "*";
         }
