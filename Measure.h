@@ -46,7 +46,7 @@ double getInteraction(  vector<int> A, const int numTypeA,
         }
     }
 
-	return ( H_X + H_Y - H_XY ) / max(H_X,H_Y);
+	return ( H_X + H_Y - H_XY );
 }
 
 double getOutcomeAssociation(   vector<int> A, const int numTypeA, 
@@ -84,7 +84,7 @@ double getOutcomeAssociation(   vector<int> A, const int numTypeA,
 		}
 	}
 
-	return ( H_X + H_Y - H_XY ) / H_Y;
+	return ( H_X + H_Y - H_XY );
 	return 0;
 }
 
