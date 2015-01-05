@@ -13,7 +13,7 @@ private:
 	vector<long long> freq;
 public:
 	FrequencyTable(const int precision = 4) {
-		// if the precision is set 4 then range which considered in this class is [0.0001,1.0000]
+		// if the precision is set 4 then range which considered in this class is [0.0000,1.0000]
 		order = 1;
 		for (int i = 0; i < precision; ++i) order *= 10;
 		freq = vector<long long>(order + 1, 0);
@@ -46,11 +46,11 @@ public:
 		return -1;
 	}
 
-	vector< pair<double, long long> > freq2bin(int bin) {
+	vector< pair<double, long long> > freq2bin(int binSize) {
 		int mini = getMinPos();
 		int maxi = getMaxPos();
 
-		const int width = (int)ceil((maxi - mini) * 1.0 / bin);
+		const int width = (int)ceil((maxi - mini) * 1.0 / binSize);
 		vector< pair<double,long long> > ret;
 		for (int i = mini; i <= maxi; i += width) {
 			long long cumsum = 0;
@@ -61,6 +61,17 @@ public:
 		}
 
 		return ret;
+	}
+
+	void output(const char *outName, const int binSize) {
+		
+		ofstream oup(outName);
+		auto ret = freq2bin(binSize);
+
+		for (auto x : ret) {
+			oup << x.first << "\t" << x.second << endl;
+		}
+		oup.close();
 	}
 };
 

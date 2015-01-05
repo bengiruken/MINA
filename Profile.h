@@ -52,6 +52,9 @@ private:
         auto mini = *min_element( row.begin(), row.end() );
         auto maxi = *max_element( row.begin(), row.end() );
 
+		if (fabs(mini - maxi) < 1e-10) {
+			return vector<int>(row.size(), 0);
+		}
         double scale = maxi - mini;
         for( auto x : row ) {
             double val = x - mini;
@@ -78,6 +81,7 @@ public:
         numTypes = maxi - mini + 1;
         assert( 0 == mini );
     }
+
 
     size_t getNumTypes() {
         return numTypes;
