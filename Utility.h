@@ -10,13 +10,16 @@
 using namespace std;
 
 template <typename T>
-vector< vector<T> > read(  const char *filename ) {
+vector< vector<T> > read( const char *filename ) {
+	
 	ifstream inp(filename);
 	string line;	
 
 	vector< vector<T> > ret;
 	int i = 0;
 	while( getline(inp,line) ) {
+		++i;
+		
 		istringstream sin(line);
 
 		vector<T> row;
@@ -114,7 +117,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
 
     long long newPercentage = numIteration * 100 / totalIteration;
 
-    //if( newPercentage > percentage ) {
+    if( newPercentage > percentage ) {
         percentage = newPercentage;
         for( size_t i = 0 ; i < content.size() ; ++i ) {
             cout << "\b";
@@ -133,7 +136,7 @@ void showProgress(  const long long numIteration, const long long totalIteration
         }
 
         cout << content;
-    //}
+    }
 
 }
 #endif
