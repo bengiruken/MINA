@@ -77,6 +77,11 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FrequencyTable.h" />
     <ClInclude Include="Measure.h" />
@@ -84,10 +89,11 @@
     <ClInclude Include="Outcome.h" />
     <ClInclude Include="Param.h" />
     <ClInclude Include="Profile.h" />
+    <ClInclude Include="Sample.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="toy_example.cc" />
+    <ClCompile Include="test.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

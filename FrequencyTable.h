@@ -46,9 +46,9 @@ public:
 		return -1;
 	}
 
-	vector< pair<double, long long> > freq2bin(int binSize) {
-		int mini = getMinPos();
-		int maxi = getMaxPos();
+	vector< pair<double, long long> > freq2bin(int binSize, double minPos = -1, double maxPos = -1) {
+		int mini = minPos < 0 ? getMinPos() : (int)(minPos * order);
+		int maxi = maxPos < 0 ? getMaxPos() : (int)(maxPos * order);
 
 		const int width = (int)ceil((maxi - mini) * 1.0 / binSize);
 		vector< pair<double,long long> > ret;
@@ -73,6 +73,18 @@ public:
 		}
 		oup.close();
 	}
+
+	void outputRange(const char *outName, const int binSize, double mini = 0, double maxi = 1.0) {
+
+		ofstream oup(outName);
+		auto ret = freq2bin(binSize, mini, maxi);
+
+		for (auto x : ret) {
+			oup << x.first << "\t" << x.second << endl;
+		}
+		oup.close();
+	}
+
 };
 
 #endif

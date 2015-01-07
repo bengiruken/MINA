@@ -36,9 +36,12 @@
     <ClInclude Include="FrequencyTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="toy_example.cc">
+    <ClCompile Include="test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
