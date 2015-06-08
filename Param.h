@@ -15,8 +15,7 @@ struct Param {
     int maxPerm;
     vector<double> alpha;
 
-    Param() {
-        ifstream inp("param.txt");
+    Param(int argv, char *argc[]) {
         string line; 
         getline( inp, line );
         while ( getline( inp, line ) ) {
