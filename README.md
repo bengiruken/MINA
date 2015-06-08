@@ -20,29 +20,35 @@ make
 
 ### Running MINA with toy example
 
-<pre>
-cd bin
-./MINA
-</pre>
+In windows
+```
+test.bat
+```
 
-### Setting parameters
-* geneinfo
- * A file path for symbols of genes for every profiles.
-* profiles
- * File paths for expressions/alterations of genomic profiles.
-* clinical
- * A file path for outcomes for each patients.
-* maxPerm
- * Number of iterations for permutation tests.
-* alpha
- * alpha threshold of single profile / intersection network / union network.
+In linux
+```
+./test.sh
+```
 
-### Example of param.txt
-<pre>
-geneinfo: ../sample/symbol.txt
-profiles: ../sample/CNA.txt ../sample/mRNA.txt ../sample/METH.txt
-clinical: ../sample/clinical.txt
-maxPerm: 30
-alpha: 0.0 0.7 1.0
-</pre>
+### Detail of the command line parameter
 
+* `-s`: name of gene symbol file
+* `-ip`: name of a profile file
+* `-io`: name of a clincial outcome file
+* `-o`: path of the output
+* `dist` or `network`: type of output
+* `-perm`: number of iterations to get threshold values
+* `-alpha`: stringent parameters to construct integrative networks
+* `-dlo`, `-dhi` : boundary of distribution assessment
+
+## Running examples
+
+* Assessing mutual information distribution for each profile
+```
+./MINA -s symbol.txt -ip A.txt -ip B.txt -io outcome.txt -o output/ dist
+```
+
+* Constructing integrative network of the profiles
+```
+./MINA -s symbol.txt -ip A.txt -ip B.txt -io outcome.txt -maxperm 30 -alpha 0.8
+```
