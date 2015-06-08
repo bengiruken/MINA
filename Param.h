@@ -11,61 +11,63 @@ struct Param {
     string geneInfo;
     vector<string> profiles;
     string clinical;
-    string separation;
+    string method;
+    string outpath;
+
     int maxPerm;
-    vector<double> alpha;
+    double alpha;
+    double distLo, distHi;
 
     Param(int argv, char *argc[]) {
-        string line; 
-        getline( inp, line );
-        while ( getline( inp, line ) ) {
-            vector<string> toks = tokenization( line );
-
-            if( toks.front() == "geneinfo:" ) {
-                geneInfo = toks.back(); 
+        distLo = 0.0;
+        distHi = 1.0;
+        maxPerm = 0;
+        outpath = "output\\";
+        for( int i = 1 ; i < argv ; ++i ) {
+            if( strcmp( argc[i], "-s") == 0 ) {
+                geneInfo = argc[++i];
             }
-            else if( toks.front() == "profiles:" ) {
-                for( size_t i = 1 ; i < toks.size() ; ++i ) {
-                    profiles.push_back(toks[i]);
-                }
+            else if( strcmp( argc[i], "-ip") == 0 ) {
+                profiles.push_back(argc[++i]);
             }
-            else if( toks.front() == "clinical:" ) { 
-                clinical = toks.back();
+            else if( strcmp( argc[i], "-io") == 0 ) {
+                clinical = argc[++i];
             }
-            else if( toks.front() == "separation:" ) {
-                separation = toks.back();
+            else if( strcmp( argc[i], "-o") == 0 ) {
+                outpath = argc[++i];
             }
-            else if( toks.front() == "maxPerm:" ) {
-                sscanf(toks.back().c_str(), "%d", &maxPerm );
+            else if( strcmp( argc[i], "-perm") == 0 ) {
+                sscanf(argc[++i], "%d", &maxPerm);
             }
-            else if( toks.front() == "alpha:" ) {
-                for( size_t i = 1 ; i < toks.size() ; ++i ) {
-                    double val;
-                    sscanf(toks[i].c_str(),"%lf", &val);
-                    alpha.push_back(val);
-                }
+            else if( strcmp( argc[i], "-alpha") == 0 ) {
+                sscanf(argc[++i], "%lf", &alpha);
+            }
+            else if( strcmp( argc[i], "-dlo") == 0 ) {
+                sscanf(argc[++i], "%lf", &distLo);
+            }
+            else if( strcmp( argc[i], "-dhi") == 0 ) {
+                sscanf(argc[++i], "%lf", &distHi);
+            }
+            else if( strcmp(argc[i],"dist") == 0 || strcmp(argc[i],"network") == 0 ) {
+                method = argc[i];
             }
             else {
-                errorMsg( toks.front() + " is not a valid parameter" );
+                errorMsg( string(argc[i]) + " is not a valid parameter" );
             }
         }
         
-        inp.close();
     }
 
     void getParamInfo( ostream &out ) {
             out << "Informations" << endl;
             out << "Start time : " << currentDateTime() << endl;
+            out << "method : " << method << endl;
             out << "geneInfo : " << geneInfo << endl;
             out << "profiles : " << join( profiles, "," ) << endl;
             out << "clinical : " << clinical << endl;
-            out << "separation : " << separation << endl;
             out << "maxPerm : " << maxPerm << endl;
-            out << "alpha :";
-            for( size_t i = 0 ; i < alpha.size() ; ++i ) {
-                out << " " << alpha[i];
-            }
-            out << endl;
+            out << "alpha :" << alpha << endl;
+            out << "outpath : " << outpath << endl;
     }
 };
 
