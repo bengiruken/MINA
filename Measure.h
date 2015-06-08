@@ -25,7 +25,7 @@ double mutualInformation(   vector<int> A, const int numTypeA,
 	memset( freq, 0, sizeof freq );
 
 	for( size_t i = 0 ; i < outcome.size() ; ++i ) {
-		freq[ outcome[i] ][ A[i] * numTypeA + B[i] ]++;	
+		freq[ outcome[i] ][ A[i] * numTypeB + B[i] ]++;	
 	}
 
 	double H_Y = 0;
@@ -49,7 +49,7 @@ double mutualInformation(   vector<int> A, const int numTypeA,
 		}
 	}
 
-	return ( H_X + H_Y - H_XY ) / H_Y;
+	return ( H_X + H_Y - H_XY );
 	return 0;
 }
 

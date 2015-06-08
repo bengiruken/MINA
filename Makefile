@@ -1,2 +1,2 @@
 all: main.cc
-	g++ -fopenmp -O3 main.cc -o bin/MINA
+	g++ -std=c++11 -fopenmp -O3 main.cc -o bin/MINA
