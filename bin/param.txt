@@ -1,6 +1,0 @@
-# caution - Do not remove name of parameters
-geneinfo: ../sample/symbol.txt
-profiles: ../sample/CNA.txt ../sample/mRNA.txt ../sample/METH.txt
-clinical: ../sample/clinical.txt
-maxPerm: 30
-alpha: 0.0 0.7 1.0
