@@ -1,9 +1,9 @@
 Informations
-Start time : 2015-06-08.17:02:40
+Start time : 2015-07-01.16:17:13
 method : dist
-geneInfo : sample\symbol.txt
-profiles : sample\CNA.txt,sample\METH.txt,sample\mRNA.txt
-clinical : sample\clinical.txt
-maxPerm : 0
-alpha :1.13266e-317
-outpath : output\
+geneInfo : sample/symbol.txt
+profiles : sample/CNA.txt,sample/METH.txt,sample/mRNA.txt
+clinical : sample/clinical.txt
+maxPerm : 30
+alpha :6.93909e-310
+outpath : output/

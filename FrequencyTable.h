@@ -6,18 +6,19 @@
 #include <algorithm>
 using namespace std;
 
-// for [0,1] inteval
 class FrequencyTable {
 private:
-	int order;
+	double lo, hi;
+	double interval;
+	int bins;
 	vector<long long> freq;
 public:
-	FrequencyTable(const int precision = 4) {
-		// if the precision is set 4 then range which considered in this class is [0.0000,1.0000]
-		order = 1;
-		for (int i = 0; i < precision; ++i) order *= 10;
-		freq = vector<long long>(order + 1, 0);
-
+	FrequencyTable(const double _lo = 0, const double _hi = 1, const int _bins = 30) {
+		lo = _lo;
+		hi = _hi;
+		bins = _bins;
+		interval =  (hi-lo)/bins;
+		freq = vector<long long>(bins, 0);	
 	}
 
 	void clear() {
@@ -25,58 +26,13 @@ public:
 	}
 
 	void put(const double &x) {
-		freq[int(x*order)]++;
+		freq[ min(bins-1, int(x/interval)) ]++;
 	}
 
-	int getMinPos() {
-		for (int i = 0; i < (int)freq.size(); ++i) {
-			if (freq[i] >0) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	int getMaxPos() {
-		for (int i = (int)freq.size() - 1; i >= 0;  --i) {
-			if (freq[i] > 0) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	vector< pair<double, long long> > freq2bin(int binSize, double minPos = -1, double maxPos = -1) {
-		int mini = minPos < 0 ? getMinPos() : (int)(minPos * order);
-		int maxi = maxPos < 0 ? getMaxPos() : (int)(maxPos * order);
-
-        // to avoid exception when maxi == mini
-        
-        if( maxi == mini ) {
-            vector< pair<double,long long> > ret;
-            ret.push_back( make_pair( (double)maxi / order, freq[maxi] ) );
-            return ret;
-        }
-		const int width = (int)ceil((maxi - mini) * 1.0 / binSize);
-		vector< pair<double,long long> > ret;
-		for (int i = mini; i <= maxi; i += width) {
-			long long cumsum = 0;
-			for (int j = i; j < min(i + width, maxi+1); ++j) {
-				cumsum += freq[j];
-			}
-			ret.push_back(make_pair((double)i / order, cumsum));
-		}
-
-		return ret;
-	}
-
-	void output(const char *outName, const int binSize, double mini = -1, double maxi = -1 ) {
-		
+	void output(const char *outName ) {
 		ofstream oup(outName);
-		auto ret = freq2bin(binSize, mini, maxi);
-
-		for (auto x : ret) {
-			oup << x.first << "\t" << x.second << endl;
+		for( int i = 0 ; i < bins ; ++i ) {
+			oup << lo + i*interval << " " << freq[i] << endl;
 		}
 		oup.close();
 	}

@@ -13,6 +13,41 @@ inline double entropy( int up, int dn ) {
 	else return - double(up) / dn * log2( double(up) / dn );
 } 
 
+double chiSquare(	vector<int> A, const int numTypeA, 
+					vector<int> B, const int numTypeB,
+					Outcome outcome ) {
+
+	const int N = (int)outcome.size();
+	const int maxState = numTypeA * numTypeB;
+
+	int freq[ outcome.getNumTypes() ][ maxState ];
+	int rowsum[ outcome.getNumTypes() ];
+	int colsum[ maxState ];
+
+	memset( freq, 0, sizeof freq );
+	memset(rowsum, 0, sizeof rowsum);
+	memset(colsum, 0, sizeof colsum);
+
+	for( size_t i = 0 ; i < N ; ++i ) {
+		freq[ outcome[i] ][ A[i] * numTypeB + B[i] ]++;	
+		rowsum[ outcome[i] ]++;
+		colsum[ A[i] * numTypeB + B[i] ]++;
+	}
+
+	double ret = 0.0;
+
+
+	for( int i = 0 ; i < outcome.getNumTypes() ; ++i ) {
+		for( int j = 0 ; j < maxState ; ++j ) {
+			double expected = rowsum[i] * colsum[j] / (double)N;
+			if( fabs(expected) < 1e-9 ) continue;
+			ret += (expected-freq[i][j]) * (expected-freq[i][j]) / expected; 
+		}
+	}
+	return ret;
+	
+}
+
 
 double mutualInformation(   vector<int> A, const int numTypeA, 
                             vector<int> B, const int numTypeB, 
@@ -48,7 +83,7 @@ double mutualInformation(   vector<int> A, const int numTypeA,
 			H_XY += entropy( freq[i][j], outcome.size() );
 		}
 	}
-
+	
 	return ( H_X + H_Y - H_XY );
 	return 0;
 }

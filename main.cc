@@ -9,6 +9,7 @@
 #include <cmath>
 #include <limits>
 #include <numeric>
+#include <functional>
 #include "omp.h"
 #include "Utility.h"
 #include "Outcome.h"
@@ -17,6 +18,8 @@
 #include "Param.h"
 #include "FrequencyTable.h"
 using namespace std;
+
+function< decltype(mutualInformation) > measure = &mutualInformation;
 
 double getThreshold(    Profile &profile, Outcome &outcome, 
                         const int numPermute ) {
@@ -39,9 +42,9 @@ double getThreshold(    Profile &profile, Outcome &outcome,
 
             # pragma omp for
             for( int iter = 0 ; iter < numPermute ; ++iter ) {
-                sumMI[iter] = mutualInformation(    profile[i], profile.getNumTypes(), 
-                                                    profile[j], profile.getNumTypes(),
-                                                    outcomes[iter] );
+                sumMI[iter] = measure(    profile[i], profile.getNumTypes(), 
+										profile[j], profile.getNumTypes(),
+										outcomes[iter] );
             }
             showProgress( ++iteration, totalIteration );
             double avg = accumulate( sumMI.begin(), sumMI.end(), 0.0 ) / numPermute;
@@ -67,7 +70,7 @@ void getEdges(  const vector<string> genenames, const Param &param,
 
 
     FILE *outUni = fopen((param.outpath+"union.txt").c_str(),"w");
-    FILE *outInt = fopen((param.outpath+"output/inter.txt").c_str(),"w");
+    FILE *outInt = fopen((param.outpath+"inter.txt").c_str(),"w");
 
     double alpha = param.alpha;
 
@@ -86,9 +89,9 @@ void getEdges(  const vector<string> genenames, const Param &param,
         # pragma omp for
         for( int ord = 0 ; ord < numProfiles ; ++ord ) {
             Profile &P = profiles[ord];
-            values[ord] = mutualInformation(  P[i], P.getNumTypes(), 
-                                              P[j], P.getNumTypes(),
-                                              outcome );
+            values[ord] = measure(	P[i], P.getNumTypes(), 
+									P[j], P.getNumTypes(),
+									outcome );
         }
 
         bool isInter = true;
@@ -110,6 +113,7 @@ void getEdges(  const vector<string> genenames, const Param &param,
             }
 
         }
+
 
         if( isInter ) {
             fprintf( outInt, "%s\t%s", genenames[i].c_str(), genenames[j].c_str() );
@@ -133,7 +137,7 @@ void getEdges(  const vector<string> genenames, const Param &param,
             fprintf( outUni, "\n" );
         }
 
-
+	
         showProgress( ++iteration, totalIteration );
     }
 
@@ -149,7 +153,7 @@ void getDist(  const Param &param, vector<Profile> &profiles, Outcome &outcome )
         fileName.push_back( param.outpath+base_name(param.profiles[i]) );
     }
 
-    vector<FrequencyTable> ft( numProfiles );
+    vector<FrequencyTable> ft( numProfiles, FrequencyTable(param.distLo, param.distHi,param.nbins)  );
 
 
     const size_t numFeatures = profiles.front().getNumFeatures();
@@ -166,9 +170,9 @@ void getDist(  const Param &param, vector<Profile> &profiles, Outcome &outcome )
         # pragma omp for
         for( int ord = 0 ; ord < numProfiles ; ++ord ) {
             Profile &P = profiles[ord];
-            values[ord] = mutualInformation(  P[i], P.getNumTypes(), 
-                                              P[j], P.getNumTypes(),
-                                              outcome );
+            values[ord] = measure(  P[i], P.getNumTypes(), 
+									  P[j], P.getNumTypes(),
+										  outcome );
             ft[ord].put(values[ord]);
         }
 
@@ -178,7 +182,7 @@ void getDist(  const Param &param, vector<Profile> &profiles, Outcome &outcome )
     }
 
     for( int ord = 0 ; ord < numProfiles ; ++ord ) {
-        ft[ord].output(fileName[ord].c_str(), 30, param.distLo, param.distHi );
+        ft[ord].output(fileName[ord].c_str());
     }
 
 }
@@ -198,19 +202,26 @@ int main(int argv, char *argc[]) {
     vector<Profile> profiles;
 
 
+	if( param.measure == "omi" ) {
+		measure = mutualInformation;
+	}
+
+	else if( param.measure == "chi" ) {
+		measure = chiSquare;
+	}
+
+
     for( size_t i = 0 ; i < param.profiles.size() ; ++i ) {
         profiles.push_back( Profile( param.profiles[i].c_str(), 5 ) );
     }
     if( param.method == "network" ) {
         vector<double> thresholds;
-
-
         cerr << "Reading profiles and get threshold value..." << endl;
         ofstream outTh(param.outpath+"threshold.txt");
 
         for( size_t i = 0 ; i < param.profiles.size() ; ++i ) {
             cerr << param.profiles[i] << " ";
-            thresholds.push_back( getThreshold( profiles.back(), outcome, param.maxPerm ) );
+            thresholds.push_back( getThreshold( profiles[i], outcome, param.maxPerm ) );
             cerr << " DONE!" << endl;
             outTh << param.profiles[i] << "\t" << thresholds.back() << endl;
         }
